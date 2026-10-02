@@ -1,0 +1,480 @@
+{
+  "info": {
+    "name": "API Health & Monitoring Dashboard API",
+    "_postman_id": "9b12e56d-b827-463d-82d9-e93cf82a8123",
+    "description": "Comprehensive Postman collection for testing the API Health & Monitoring Dashboard REST API, including Auth, User-specific API monitoring, Metrics, History, and Admin RBAC.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "apiId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"testuser@example.com\",\n  \"password\": \"SecurePass123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login - Demo User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.data && json.data.token) {",
+                  "    pm.collectionVariables.set('authToken', json.data.token);",
+                  "    console.log('Saved demo authToken');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"demo@healthcheck.io\",\n  \"password\": \"Demo@12345\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login - Admin User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.data && json.data.token) {",
+                  "    pm.collectionVariables.set('adminToken', json.data.token);",
+                  "    console.log('Saved adminToken');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@healthcheck.io\",\n  \"password\": \"Admin@12345\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current Profile (Me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Monitored APIs Management",
+      "item": [
+        {
+          "name": "List User Monitored APIs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/monitors",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "monitors"]
+            }
+          }
+        },
+        {
+          "name": "Register New API",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"CoinGecko Ping API\",\n  \"url\": \"https://api.coingecko.com/api/v3/ping\",\n  \"method\": \"GET\",\n  \"headers\": \"{}\",\n  \"expected_status_code\": 200,\n  \"check_interval\": \"5m\",\n  \"timeout_ms\": 5000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/monitors",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "monitors"]
+            }
+          }
+        },
+        {
+          "name": "Get API Details by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/monitors/{{apiId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "monitors", "{{apiId}}"]
+            }
+          }
+        },
+        {
+          "name": "Trigger Manual Health Check (Check Now)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/monitors/{{apiId}}/check",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "monitors", "{{apiId}}", "check"]
+            }
+          }
+        },
+        {
+          "name": "Update API Monitor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"JSONPlaceholder Posts Updated\",\n  \"url\": \"https://jsonplaceholder.typicode.com/posts\",\n  \"method\": \"GET\",\n  \"check_interval\": \"1m\",\n  \"timeout_ms\": 4000,\n  \"expected_status_code\": 200\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/monitors/{{apiId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "monitors", "{{apiId}}"]
+            }
+          }
+        },
+        {
+          "name": "Toggle API Active/Pause State",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/monitors/{{apiId}}/toggle",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "monitors", "{{apiId}}", "toggle"]
+            }
+          }
+        },
+        {
+          "name": "Delete API Monitor",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/monitors/{{apiId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "monitors", "{{apiId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Monitoring Metrics & History",
+      "item": [
+        {
+          "name": "Dashboard Overview Summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/metrics/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "metrics", "dashboard"]
+            }
+          }
+        },
+        {
+          "name": "Get API Health Check History Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/metrics/apis/{{apiId}}/history?limit=20&page=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "metrics", "apis", "{{apiId}}", "history"],
+              "query": [
+                { "key": "limit", "value": "20" },
+                { "key": "page", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get API Time-Series Metrics (Latency & Uptime)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/metrics/apis/{{apiId}}/metrics?points=30",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "metrics", "apis", "{{apiId}}", "metrics"],
+              "query": [
+                { "key": "points", "value": "30" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Admin & RBAC",
+      "item": [
+        {
+          "name": "Get Global System Stats (Admin Only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Get All Registered Users (Admin Only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "users"]
+            }
+          }
+        },
+        {
+          "name": "Get All System APIs (Admin Only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/apis",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "apis"]
+            }
+          }
+        },
+        {
+          "name": "Update User Role (Admin Only)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/2/role",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "users", "2", "role"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Mock Test Endpoints",
+      "item": [
+        {
+          "name": "Mock Healthy Service",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/mock/healthy",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "mock", "healthy"]
+            }
+          }
+        },
+        {
+          "name": "Mock Slow Service (Degraded)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/mock/slow",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "mock", "slow"]
+            }
+          }
+        },
+        {
+          "name": "Mock Failing Service (Down)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/mock/failing",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "mock", "failing"]
+            }
+          }
+        },
+        {
+          "name": "Mock Flaky Service",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/mock/flaky",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "mock", "flaky"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
