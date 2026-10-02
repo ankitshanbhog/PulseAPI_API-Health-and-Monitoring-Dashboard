@@ -4,7 +4,7 @@ A production-ready, full-stack API Health & Monitoring Dashboard allowing engine
 
 ---
 
-## 🌟 Key Features
+## Key Features
 
 ### 1. REST API Registration & Tracking
 - Register endpoints with custom **HTTP methods** (`GET`, `POST`, `PUT`, `DELETE`, `PATCH`, `HEAD`).
@@ -15,9 +15,9 @@ A production-ready, full-stack API Health & Monitoring Dashboard allowing engine
 
 ### 2. API Health-Status Monitoring
 - Real-time status indicators with glowing pulse animations:
-  - 🟢 **UP**: Operational, status code matches expected code, latency < 1000ms.
-  - 🟡 **DEGRADED**: Responding with high latency (> 1000ms) or unexpected client status code.
-  - 🔴 **DOWN**: Connection refused, timeout exceeded, DNS lookup failure, or `5xx` server error.
+  - **UP**: Operational, status code matches expected code, latency < 1000ms.
+  - **DEGRADED**: Responding with high latency (> 1000ms) or unexpected client status code.
+  - **DOWN**: Connection refused, timeout exceeded, DNS lookup failure, or `5xx` server error.
 - Instant on-demand **"Check Now"** trigger button.
 
 ### 3. Response-Time Monitoring
@@ -58,7 +58,7 @@ A production-ready, full-stack API Health & Monitoring Dashboard allowing engine
 
 ---
 
-## 🛠️ Technology Stack
+##  Technology Stack
 
 | Layer | Technologies |
 | :--- | :--- |
@@ -71,7 +71,7 @@ A production-ready, full-stack API Health & Monitoring Dashboard allowing engine
 
 ---
 
-## 🚀 Quick Start Guide
+##  Quick Start Guide
 
 ### Default Pre-Seeded Credentials
 
@@ -121,7 +121,7 @@ npm run dev
 
 ---
 
-## 🧪 Postman API Testing
+##  Postman API Testing
 
 A complete Postman collection is included in:
 [`postman/API_Health_Monitoring_Dashboard.postman_collection.json`](file:///d:/API-Health-and-Monitoring-Dashboard/postman/API_Health_Monitoring_Dashboard.postman_collection.json)
@@ -152,7 +152,7 @@ The backend includes mock routes to demonstrate monitoring behavior without rely
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```
 API-Health-and-Monitoring-Dashboard/
