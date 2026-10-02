@@ -140,7 +140,7 @@ To import:
 
 ---
 
-## 🔬 Built-In Mock API Endpoints
+##  Built-In Mock API Endpoints
 
 The backend includes mock routes to demonstrate monitoring behavior without relying on external networks:
 
