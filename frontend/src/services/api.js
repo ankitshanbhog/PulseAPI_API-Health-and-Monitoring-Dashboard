@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+// On Railway: set VITE_API_BASE_URL to your backend's Railway public URL (e.g. https://backend-xxx.railway.app/api)
+// Locally (docker-compose): leave unset — nginx proxies /api to the backend container
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
   headers: {
     'Content-Type': 'application/json',
   },
