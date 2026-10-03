@@ -15,11 +15,18 @@ FROM nginx:alpine
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Nginx configuration template
-RUN rm /etc/nginx/conf.d/default.conf
+# Default environment variables for template substitution (Railway injects PORT automatically)
+ENV PORT=80
+ENV BACKEND_URL=http://backend:5000
+ENV NGINX_ENVSUBST_FILTER="PORT|BACKEND_URL"
 
+# Remove default nginx config
+RUN rm -f /etc/nginx/conf.d/default.conf
+
+# Copy nginx configuration template
 COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
+
